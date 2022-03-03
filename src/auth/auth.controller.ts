@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -18,5 +19,12 @@ export class AuthController {
   @Post('/login')
   async login(@Body() payloadLogin: LoginDto): Promise<void> {
     return this.authService.login(payloadLogin);
+  }
+
+  // Endpoint logout
+  @Post('/logout')
+  @UseGuards(AuthGuard('jwt')) // <-- use guard / middleware
+  async logout(@Req() req): Promise<string> {
+    return this.authService.logout(req.user);
   }
 }

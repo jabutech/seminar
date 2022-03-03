@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entity/user.entity';
@@ -56,6 +60,31 @@ export class AuthService {
       status: 'SUCCESS',
       message: 'Login berhasil',
       token,
+    };
+  }
+
+  // Method service logout
+  async logout(payloadUserLogin): Promise<any> {
+    // Find user is login on database
+    const user = await this.authRepository.findOne(payloadUserLogin.id);
+    // If token user is notfound
+    if (!user.token) {
+      throw new BadRequestException({
+        status: 'ERROR',
+        message: 'Kamu sudah logout.',
+      });
+    }
+
+    // If user token is available
+    // set object token null
+    user.token = null;
+    // save to db
+    await user.save();
+
+    // Return
+    return {
+      status: 'SUCCESS',
+      message: 'Logout berhasil.',
     };
   }
 
