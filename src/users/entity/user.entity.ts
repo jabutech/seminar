@@ -22,8 +22,11 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   token: string;
+
+  @Column({ type: 'timestamp' })
+  createdAt: Date;
 
   //   Before insert data or update hash password
   @BeforeInsert()
