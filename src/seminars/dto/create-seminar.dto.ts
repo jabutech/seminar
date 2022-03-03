@@ -1,12 +1,11 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateSeminarDto {
   @IsNotEmpty()
   judul: string;
 
   @IsNotEmpty()
-  @IsDate()
-  jadwal_seminar: Date;
+  jadwal_seminar: string;
 
   @IsNotEmpty()
   @IsNumber()

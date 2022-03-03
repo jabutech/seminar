@@ -15,8 +15,8 @@ export class Seminar extends BaseEntity {
   @Column()
   judul: string;
 
-  @Column()
-  jadwal_seminar: Date;
+  @Column({ type: 'date' })
+  jadwal_seminar: string;
 
   @Column()
   maksimal_peserta: number;
