@@ -12,11 +12,11 @@ export class Seminar extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   judul: string;
 
   @Column()
-  jadwal_seminar: string;
+  jadwal_seminar: Date;
 
   @Column()
   maksimal_peserta: number;
