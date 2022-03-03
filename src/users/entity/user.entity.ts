@@ -1,15 +1,13 @@
+// Import bcrypt
+import * as bcrypt from 'bcrypt';
 import {
   BaseEntity,
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// Import bcrypt
-import * as bcrypt from 'bcrypt';
-import { Seminar } from 'src/seminar/entity/seminar.entity';
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -29,10 +27,6 @@ export class User extends BaseEntity {
 
   @Column({ type: 'timestamp' })
   createdAt: Date;
-
-  // Relation one to many with seminar
-  @OneToMany(() => Seminar, (seminar) => seminar.user)
-  seminar: Seminar[];
 
   //   Before insert data or update hash password
   @BeforeInsert()
