@@ -14,5 +14,6 @@ import { SeminarsController } from './seminars.controller';
   ],
   providers: [SeminarsService],
   controllers: [SeminarsController],
+  exports: [SeminarsService],
 })
 export class SeminarsModule {}

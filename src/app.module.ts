@@ -5,6 +5,7 @@ import { typeOrmConfig } from 'src/config/database.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { SeminarsModule } from './seminars/seminars.module';
+import { JoinSeminarsModule } from './join-seminars/join-seminars.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SeminarsModule } from './seminars/seminars.module';
     UsersModule,
     AuthModule,
     SeminarsModule,
+    JoinSeminarsModule,
   ],
 })
 export class AppModule {}

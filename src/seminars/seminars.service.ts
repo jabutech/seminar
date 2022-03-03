@@ -1,11 +1,8 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSeminarDto } from './dto/create-seminar.dto';
 import { UpdateSeminarDto } from './dto/update-seminar.dto';
+import { Seminar } from './entity/seminar.entity';
 import { SeminarsRepository } from './seminar.repository';
 
 @Injectable()
@@ -49,5 +46,22 @@ export class SeminarsService {
       status: 'SUCCESS',
       message: 'Seminar berhasil dihapus.',
     };
+  }
+
+  // Find one seminar service
+  async findOneSeminar(judul: string): Promise<Seminar> {
+    const seminar = await this.seminarRespository.findOne(
+      { judul },
+      // Relation
+      { relations: ['user'] },
+    );
+    // If user is available and password is valid
+    if (seminar) {
+      // Return user
+      return seminar;
+    }
+
+    // If no, return null
+    return null;
   }
 }
