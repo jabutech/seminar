@@ -1,5 +1,13 @@
-import { BaseEntity, BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import {
+  BaseEntity,
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+// Import bcrypt
+import * as bcrypt from 'bcrypt';
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -17,6 +25,16 @@ export class User extends BaseEntity {
   @Column()
   token: string;
 
-  @BeforeInsert
-  @BeforeUpdate
+  //   Before insert data or update hash password
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    //   If password empty
+    if (!this.password) {
+      return;
+    }
+    // If password available run password hash
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }
