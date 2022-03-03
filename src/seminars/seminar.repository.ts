@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateSeminarDto } from './dto/create-seminar.dto';
+import { UpdateSeminarDto } from './dto/update-seminar.dto';
 import { Seminar } from './entity/seminar.entity';
 
 @EntityRepository(Seminar)
@@ -47,5 +49,37 @@ export class SeminarsRepository extends Repository<Seminar> {
         });
       }
     }
+  }
+
+  // Edit seminar
+  async updateSeminar(
+    id: string,
+    userLogin: any,
+    payloadSeminar: UpdateSeminarDto,
+  ): Promise<any> {
+    // Destructuring payload
+    const { judul, jadwal_seminar, maksimal_peserta } = payloadSeminar;
+
+    // Find seminar by id
+    const seminar = await Seminar.findOne({ id });
+
+    // If seminar not found
+    if (!seminar) {
+      throw new BadRequestException({
+        status: 'ERROR',
+        message: 'Seminar tidak ditemukan.',
+      });
+    }
+
+    // Update seminar
+    seminar.judul = judul;
+    seminar.jadwal_seminar = jadwal_seminar;
+    seminar.maksimal_peserta = maksimal_peserta;
+    await seminar.save();
+
+    return {
+      status: 'SUCCESS',
+      message: 'Seminar berhasil diupdate.',
+    };
   }
 }

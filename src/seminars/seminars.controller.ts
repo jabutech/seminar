@@ -1,6 +1,15 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateSeminarDto } from './dto/create-seminar.dto';
+import { UpdateSeminarDto } from './dto/update-seminar.dto';
 import { SeminarsService } from './seminars.service';
 
 @Controller('seminars')
@@ -17,5 +26,15 @@ export class SeminarsController {
     @Body() paylodSeminar: CreateSeminarDto,
   ): Promise<any> {
     return this.seminarService.createSeminar(req.user, paylodSeminar);
+  }
+
+  // Enpoint update seminar
+  @Put('/update/:id')
+  async updateSeminar(
+    @Param('id') id: string,
+    @Req() req,
+    @Body() payloadSeminar: UpdateSeminarDto,
+  ): Promise<any> {
+    return this.seminarService.updateSeminar(id, req.user, payloadSeminar);
   }
 }

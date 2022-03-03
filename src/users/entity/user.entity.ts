@@ -31,7 +31,9 @@ export class User extends BaseEntity {
   createdAt: Date;
 
   // Relation one to many with seminar
-  @OneToMany(() => Seminar, (seminar) => seminar.user)
+  @OneToMany(() => Seminar, (seminar) => seminar.user, {
+    eager: true,
+  })
   seminar: Seminar[];
 
   //   Before insert data or update hash password
