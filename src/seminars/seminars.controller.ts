@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Post,
   Put,
@@ -36,5 +37,11 @@ export class SeminarsController {
     @Body() payloadSeminar: UpdateSeminarDto,
   ): Promise<any> {
     return this.seminarService.updateSeminar(id, req.user, payloadSeminar);
+  }
+
+  // Endpoint delete seminar
+  @Delete('/delete/:id')
+  async deteleSeminar(@Param('id') id: string, @Req() req): Promise<any> {
+    return this.seminarService.deleteSeminar(id, req.user);
   }
 }

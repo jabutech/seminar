@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateSeminarDto } from './dto/create-seminar.dto';
@@ -65,7 +66,7 @@ export class SeminarsRepository extends Repository<Seminar> {
 
     // If seminar not found
     if (!seminar) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         status: 'ERROR',
         message: 'Seminar tidak ditemukan.',
       });
