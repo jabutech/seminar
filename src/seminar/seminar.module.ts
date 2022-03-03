@@ -1,4 +1,10 @@
 import { Module } from '@nestjs/common';
+import { UsersModule } from 'src/users/users.module';
 
-@Module({})
+@Module({
+  imports: [
+    //   Import user module
+    UsersModule,
+  ],
+})
 export class SeminarModule {}
