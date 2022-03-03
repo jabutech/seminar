@@ -3,6 +3,7 @@ import {
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateSeminarDto } from './dto/create-seminar.dto';
@@ -62,13 +63,21 @@ export class SeminarsRepository extends Repository<Seminar> {
     const { judul, jadwal_seminar, maksimal_peserta } = payloadSeminar;
 
     // Find seminar by id
-    const seminar = await Seminar.findOne({ id });
+    const seminar = await Seminar.findOne({ id }, { relations: ['user'] });
 
     // If seminar not found
     if (!seminar) {
       throw new NotFoundException({
         status: 'ERROR',
         message: 'Seminar tidak ditemukan.',
+      });
+    }
+
+    // If the seminar does not belong to the logged in user
+    if (seminar.user.id !== userLogin.id) {
+      throw new UnauthorizedException({
+        status: 'ERROR',
+        message: 'Tidak dapat update seminar yang bukan milik kamu.',
       });
     }
 
@@ -81,6 +90,37 @@ export class SeminarsRepository extends Repository<Seminar> {
     return {
       status: 'SUCCESS',
       message: 'Seminar berhasil diupdate.',
+    };
+  }
+
+  // Delete seminar
+  async deleteSeminar(id: string, userLogin: any): Promise<any> {
+    // Find seminar by id
+    const seminar = await Seminar.findOne({ id }, { relations: ['user'] });
+
+    // If seminar not found
+    if (!seminar) {
+      throw new NotFoundException({
+        status: 'ERROR',
+        message: 'Seminar tidak ditemukan.',
+      });
+    }
+
+    // If the seminar does not belong to the logged in user
+    if (seminar.user.id !== userLogin.id) {
+      throw new UnauthorizedException({
+        status: 'ERROR',
+        message: 'Tidak dapat delete seminar yang bukan milik kamu.',
+      });
+    }
+
+    // Delete seminar
+    await Seminar.delete(id);
+
+    // If success, return response
+    return {
+      status: 'SUCCESS',
+      message: 'Seminar berhasil dihapus.',
     };
   }
 }

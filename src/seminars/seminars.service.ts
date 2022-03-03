@@ -29,23 +29,9 @@ export class SeminarsService {
     return this.seminarRespository.updateSeminar(id, userLogin, payloadSeminar);
   }
 
-  // Delete
+  // Delete seminar
   async deleteSeminar(id: string, userLogin: any): Promise<any> {
-    // Delete book use object delete from bookRepository
-    const result = await this.seminarRespository.delete(id);
-    // Chek status affected for get status successfully deleted.
-    if (result.affected === 0) {
-      throw new NotFoundException({
-        status: 'ERROR',
-        message: `Seminar dengan ${id} tidak ditemukan.`,
-      });
-    }
-
-    // If success, return response
-    return {
-      status: 'SUCCESS',
-      message: 'Seminar berhasil dihapus.',
-    };
+    return this.seminarRespository.deleteSeminar(id, userLogin);
   }
 
   // Find one seminar service
