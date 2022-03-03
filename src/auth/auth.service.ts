@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entity/user.entity';
 import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -56,5 +57,10 @@ export class AuthService {
       message: 'Login berhasil',
       token,
     };
+  }
+
+  // Method get user by id for validate jwt strategy
+  async findUserById(id: string): Promise<User> {
+    return await this.authRepository.findOne(id);
   }
 }
