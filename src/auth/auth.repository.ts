@@ -2,8 +2,10 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/entity/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
+import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
 @EntityRepository(User)
@@ -26,7 +28,7 @@ export class AuthRepository extends Repository<User> {
       //   Return response
       return {
         status: 'SUCCESS',
-        message: 'User registration is successful.',
+        message: 'User berhasil didaftarkan.',
       };
     } catch (error) {
       // If error no 1062 as duplicate entry from mysql
@@ -34,7 +36,7 @@ export class AuthRepository extends Repository<User> {
         // Return error respons
         throw new ConflictException({
           status: 'ERROR',
-          message: `Email already exist.`,
+          message: 'Email sudah ada.',
         });
       } else {
         // If no, return any error
@@ -44,5 +46,23 @@ export class AuthRepository extends Repository<User> {
         });
       }
     }
+  }
+
+  // Method validate user
+  async validateUser(payloadLogin: LoginDto): Promise<any> {
+    // Destructuring payload login
+    const { email, password } = payloadLogin;
+
+    // Find user on db by email
+    const user = await User.findOne({ email });
+
+    // If user is available and password is match
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // Return user
+      return user;
+    }
+
+    // If user not found
+    return null;
   }
 }
